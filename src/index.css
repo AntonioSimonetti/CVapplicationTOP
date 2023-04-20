@@ -1,0 +1,109 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: wheat;
+}
+
+
+
+.mainDiv  {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  border: 0.25rem solid black;
+  margin: 1rem;
+  padding: 1rem;
+}
+
+.infoDiv, .educationDiv, .praticalDiv {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.75rem;
+}
+
+.infoDiv {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.75rem;
+}
+
+
+.educationList, .praticalList, .infoList {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  list-style-type: none;
+  gap: 10px;
+
+}
+
+.educationList button,
+.praticalList button,
+.infoList button {
+  background-color: lightblue;
+  border: none;
+  border-radius: 8px;
+}
+
+.infoList {
+  display: flex;
+  width: 100%;
+  align-items: center; 
+  justify-content: center;
+  list-style-type: none;
+  flex-wrap: wrap; 
+  flex-direction: column;
+}
+
+.dataDisplay {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  border: black solid 0.5rem;
+}
+
+.displayPraticalExperience, .displayInfo, .displayEducation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.formInfo, .formEducation, .formExperience {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media screen and (max-width: 1024px){
+
+  body::before {
+    content: "This content is not available on smaller screens. This website is for exercise purposes only.";
+    display: block;
+    padding: 1rem;
+    font-size: 1.2rem;
+    text-align: center;
+  }
+  .mainDiv {
+    display: none;
+    content: "ciao";
+  }
+
+ 
+}
+
