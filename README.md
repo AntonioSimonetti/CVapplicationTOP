@@ -24,3 +24,8 @@ CSS<br>
 JavaScript<br>
 React<br>**
 
+**UPDATE**
+
+Rebuilded the entire App using only hooks and functional components as part of the odin project curriculum
+
+
