@@ -1,158 +1,133 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-class Education extends React.Component {
-  constructor(props) {
-    super(props);
+function Education({ onEducationListChange }) {
+  const [currentEducation, setCurrentEducation] = useState({
+    school: "",
+    degree: "",
+    fieldOfStudy: "",
+    startDate: "",
+    endDate: "",
+  });
 
-    this.state = {
-      currentEducation: {
-        school: "",
-        degree: "",
-        fieldOfStudy: "",
-        startDate: "",
-        endDate: "",
-      },
-      educationList: [],
-    };
+  const [educationList, setEducationList] = useState([]);
 
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleAdd = this.handleAdd.bind(this);
-  }
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setCurrentEducation({ ...currentEducation, [name]: value });
+  };
 
-  handleInputChange(event) {
-    const target = event.target;
-    const name = target.name;
-    const value = target.value;
-
-    this.setState((prevState) => {
-      const currentEducation = { ...prevState.currentEducation };
-      currentEducation[name] = value;
-      return { currentEducation };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setEducationList([...educationList, currentEducation]);
+    setCurrentEducation({
+      school: "",
+      degree: "",
+      fieldOfStudy: "",
+      startDate: "",
+      endDate: "",
     });
-  }
 
-  handleAdd() {
-    const { currentEducation, educationList } = this.state;
+    onEducationListChange([...educationList, currentEducation]);
+  };
 
-    this.setState(
-      {
-        educationList: [...educationList, currentEducation],
-        currentEducation: {
-          school: "",
-          degree: "",
-          fieldOfStudy: "",
-          startDate: "",
-          endDate: "",
-        },
-      },
-      () => {
-        // Callback function after state is updated
-        this.props.onEducationListChange(this.state.educationList);
-      }
-    );
-  }
+  useEffect(() => {
+    console.log("Updated educationList array", educationList);
+    console.log("Updated currentEducation object", currentEducation);
+  }, [educationList, currentEducation]);
 
-  handleDelete(index) {
-    const stateToCopy = { ...this.state };
-    const newEducationList = [...stateToCopy.educationList];
+  const handleDelete = (index) => {
+    const newEducationList = [...educationList];
     newEducationList.splice(index, 1);
-    stateToCopy.educationList = newEducationList;
-    this.setState(stateToCopy);
-  }
+    setEducationList(newEducationList);
+  };
 
-  handleEdit(index) {
-    const { educationList } = this.state;
-    const educationToEdit = educationList[index];
-    const updatedEducationList = [...educationList];
-    updatedEducationList.splice(index, 1);
-    this.setState({
-      educationList: updatedEducationList,
-      currentEducation: educationToEdit,
-    });
-  }
+  const handleEdit = (index) => {
+    const newEducationList = [...educationList];
+    const educationToEdit = newEducationList[index];
+    newEducationList.splice(index, 1);
+    setEducationList(newEducationList);
+    setCurrentEducation(educationToEdit);
+    onEducationListChange(newEducationList);
+  };
 
-  render() {
-    const { educationList, currentEducation } = this.state;
-
-    return (
-      <div className="educationDiv">
-        <h2>EDUCATION</h2>
-        {educationList.length > 0 ? (
-          <ul className="educationList">
-            {educationList.map((education, index) => (
-              <li key={index}>
-                <p>
-                  School: {education.school}
-                  <br />
-                  Degree: {education.degree}
-                  <br />
-                  Field of study: {education.fieldOfStudy}
-                  <br />
-                  Start date: {education.startDate}
-                  <br />
-                  End date: {education.endDate}
-                </p>
-                <button onClick={() => this.handleEdit(index)}>Edit</button>
-                <button onClick={() => this.handleDelete(index)}>Delete</button>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No education added yet</p>
-        )}
-        <form className="formEducation">
-          <label>
-            School:
-            <input
-              type="text"
-              name="school"
-              value={currentEducation.school}
-              onChange={this.handleInputChange}
-            />
-          </label>
-          <label>
-            Degree:
-            <input
-              type="text"
-              name="degree"
-              value={currentEducation.degree}
-              onChange={this.handleInputChange}
-            />
-          </label>
-          <label>
-            Field of study:
-            <input
-              type="text"
-              name="fieldOfStudy"
-              value={currentEducation.fieldOfStudy}
-              onChange={this.handleInputChange}
-            />
-          </label>
-          <label>
-            Start date:
-            <input
-              type="text"
-              name="startDate"
-              value={currentEducation.startDate}
-              onChange={this.handleInputChange}
-            />
-          </label>
-          <label>
-            End date:
-            <input
-              type="text"
-              name="endDate"
-              value={currentEducation.endDate}
-              onChange={this.handleInputChange}
-            />
-          </label>
-          <button type="button" onClick={this.handleAdd}>
-            Add education
-          </button>
-        </form>
-      </div>
-    );
-  }
+  return (
+    <div className="educationDiv">
+      <h2>EDUCATION</h2>
+      {educationList.length > 0 ? (
+        <ul className="educationList">
+          {educationList.map((education, index) => (
+            <li key={index}>
+              <p>
+                School: {education.school}
+                <br />
+                Degree: {education.degree}
+                <br />
+                Field of study: {education.fieldOfStudy}
+                <br />
+                Start date: {education.startDate}
+                <br />
+                End date: {education.endDate}
+              </p>
+              <button onClick={() => handleEdit(index)}>Edit</button>
+              <button onClick={() => handleDelete(index)}>Delete</button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No education added yet</p>
+      )}
+      <form className="formEducation">
+        <label>
+          School:
+          <input
+            type="text"
+            name="school"
+            value={currentEducation.school}
+            onChange={handleInputChange}
+          />
+        </label>
+        <label>
+          Degree:
+          <input
+            type="text"
+            name="degree"
+            value={currentEducation.degree}
+            onChange={handleInputChange}
+          />
+        </label>
+        <label>
+          Field of study:
+          <input
+            type="text"
+            name="fieldOfStudy"
+            value={currentEducation.fieldOfStudy}
+            onChange={handleInputChange}
+          />
+        </label>
+        <label>
+          Start date:
+          <input
+            type="text"
+            name="startDate"
+            value={currentEducation.startDate}
+            onChange={handleInputChange}
+          />
+        </label>
+        <label>
+          End date:
+          <input
+            type="text"
+            name="endDate"
+            value={currentEducation.endDate}
+            onChange={handleInputChange}
+          />
+        </label>
+        <button type="button" onClick={handleSubmit}>
+          Add education
+        </button>
+      </form>
+    </div>
+  );
 }
 
 export default Education;

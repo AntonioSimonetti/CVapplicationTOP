@@ -1,164 +1,113 @@
-import React from "react";
+import React, { useState } from "react";
 
-class GeneralInfoForm extends React.Component {
-  constructor(props) {
-    super(props);
+function GeneralInfo({ onInfoListChange }) {
+  const [currentGeneral, setCurrentGeneral] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    city: "",
+    age: "",
+  });
 
-    this.state = {
-      currentGeneral: {
-        name: "",
-        email: "",
-        phone: "",
-        city: "",
-        age: "",
-      },
-      infoList: [],
-      submitted: false,
-      editMode: false,
-    };
+  const [updatedGeneral, setUpdatedGeneral] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    city: "",
+    age: "",
+  });
 
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleAdd = this.handleAdd.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
-  }
+  const [addedInfo, setAddedInfo] = useState(false);
 
-  handleInputChange(event) {
+  const handleInputChange = (event) => {
     const target = event.target;
     const name = target.name;
     const value = target.value;
 
-    this.setState((prevState) => {
-      const currentGeneral = { ...prevState.currentGeneral };
-      currentGeneral[name] = value;
-      return { currentGeneral };
-    });
-  }
-
-  handleAdd = (event) => {
-    event.preventDefault();
-    const { currentGeneral, infoList } = this.state;
-    if (infoList.length > 0) {
-      const newList = [...infoList];
-      newList[0] = currentGeneral;
-      this.setState({
-        infoList: newList,
-        submitted: true,
-        currentGeneral: {
-          name: "",
-          email: "",
-          phone: "",
-          city: "",
-          age: "",
-        },
-      });
-    } else {
-      this.setState({
-        infoList: [currentGeneral],
-        submitted: true,
-        currentGeneral: {
-          name: "",
-          email: "",
-          phone: "",
-          city: "",
-          age: "",
-        },
-      });
-    }
-    this.props.onInfoListChange(currentGeneral);
+    setUpdatedGeneral((prevGeneral) => ({
+      ...prevGeneral,
+      [name]: value,
+    }));
   };
 
-  handleEdit(index) {
-    const { infoList } = this.state;
-    const infoToEdit = infoList[index];
-    this.setState({
-      currentGeneral: infoToEdit,
-      editMode: true,
-      submitted: false,
+  const handleAdd = () => {
+    setCurrentGeneral(updatedGeneral);
+    setUpdatedGeneral({
+      name: "",
+      email: "",
+      phone: "",
+      city: "",
+      age: "",
     });
-  }
+    setAddedInfo(true);
+    onInfoListChange(updatedGeneral);
+  };
 
-  render() {
-    const { infoList, currentGeneral } = this.state;
+  const handleEdit = () => {
+    setUpdatedGeneral(currentGeneral);
+    setAddedInfo(false);
+    onInfoListChange(currentGeneral);
+  };
 
-    return (
-      <div className="infoDiv">
-        <h2>GENERAL INFO</h2>
-        {infoList.length > 0 ? (
-          <ul className="infoList">
-            <p>
-              Name: {infoList[0].name}
-              <br />
-              Email: {infoList[0].email}
-              <br />
-              Phone: {infoList[0].phone}
-              <br />
-              City: {infoList[0].city}
-              <br />
-              Age: {infoList[0].age}
-            </p>
-            <button onClick={() => this.handleEdit(0)}>Edit</button>
-          </ul>
-        ) : (
-          <p>No info added yet</p>
-        )}
-        <form className="formInfo">
-          <label>
-            Name:
-            <input
-              type="text"
-              name="name"
-              value={currentGeneral.name}
-              onChange={this.handleInputChange}
-            />
-          </label>
-          <label>
-            Email:
-            <input
-              type="text"
-              name="email"
-              value={currentGeneral.email}
-              onChange={this.handleInputChange}
-            />
-          </label>
-          <label>
-            Phone:
-            <input
-              type="text"
-              name="phone"
-              value={currentGeneral.phone}
-              onChange={this.handleInputChange}
-            />
-          </label>
-          <label>
-            City:
-            <input
-              type="text"
-              name="city"
-              value={currentGeneral.city}
-              onChange={this.handleInputChange}
-            />
-          </label>
-          <label>
-            Age:
-            <input
-              type="text"
-              name="age"
-              value={currentGeneral.age}
-              onChange={this.handleInputChange}
-            />
-          </label>
+  return (
+    <div className="infoDiv">
+      <h2>GENERAL INFO</h2>
+      <form className="formInfo">
+        Name:
+        <input
+          type="text"
+          name="name"
+          value={updatedGeneral.name}
+          onChange={handleInputChange}
+        />
+        Email:
+        <input
+          type="text"
+          name="email"
+          value={updatedGeneral.email}
+          onChange={handleInputChange}
+        />
+        Phone:
+        <input
+          type="text"
+          name="phone"
+          value={updatedGeneral.phone}
+          onChange={handleInputChange}
+        />
+        City:
+        <input
+          type="text"
+          name="city"
+          value={updatedGeneral.city}
+          onChange={handleInputChange}
+        />
+        Age:
+        <input
+          type="number"
+          name="age"
+          value={updatedGeneral.age}
+          onChange={handleInputChange}
+        />
+      </form>
+      <button onClick={addedInfo ? handleEdit : handleAdd}>
+        {addedInfo ? "Edit" : "Add Info"}
+      </button>
 
-          <button
-            type="button"
-            onClick={this.handleAdd}
-            disabled={this.state.submitted}
-          >
-            Add info
-          </button>
-        </form>
-      </div>
-    );
-  }
+      {currentGeneral && (
+        <p>
+          Name: {currentGeneral.name}
+          <br />
+          Email: {currentGeneral.email}
+          <br />
+          Phone: {currentGeneral.phone}
+          <br />
+          City: {currentGeneral.city}
+          <br />
+          Age: {currentGeneral.age}
+        </p>
+      )}
+    </div>
+  );
 }
 
-export default GeneralInfoForm;
+export default GeneralInfo;
